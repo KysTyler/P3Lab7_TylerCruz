@@ -23,11 +23,34 @@ Persona::Persona(string name,string srName,string password,int key) {
     this->srName = srName;
     this->password = password;
     this->key = key;
+    
 }
 
 Persona::Persona(const Persona& orig) {
 }
 
 Persona::~Persona() {
+}
+
+string Persona::getName(){
+    return name;
+}
+string Persona::getsrName(){
+    return srName;
+}
+string Persona::getPassword(){
+    return password;
+}
+
+int Persona::getKey(){
+    return key;
+}
+
+vector<string> Persona::getMessage(){
+    return listmessages;
+}
+
+void Persona::setMessage(string message){
+    this->listmessages.push_back(message);
 }
 

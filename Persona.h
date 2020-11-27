@@ -25,12 +25,21 @@ public:
     virtual ~Persona();
     
     Persona(string,string,string,int);
-private:
+    
+    
+    string getName();
+    string getsrName();
+    string getPassword();
+    int getKey();
+    vector<string> getMessage();
+    void setMessage(string);
+    
+public:
     string name;
     string srName;
     string password;
     int key;
-    vector<string> mensajes;
+    vector<string> listmessages;
 };
 
 #endif /* PERSONA_H */
