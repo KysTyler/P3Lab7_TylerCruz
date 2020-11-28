@@ -18,7 +18,8 @@
 #include "Persona.h"
 
 using namespace std;
-string ceaserCipher(string messageToBeCiphered, int keys);
+string ceaserCipher(string messageToBeCiphered, int keys, string);
+string deceaserCipher(string messageToBeCiphered, int keys, string newMessage);
 
 /*
  * 
@@ -77,36 +78,40 @@ int main(int argc, char** argv) {
                         {
                             int personPos, numKey;
                             string message;
-                            cout << "¡RECUERDA PONER '_' Y NO PONER ESPACIOS SINO QUEDA UN LOOP!"
+                            cout << "¡RECUERDA PONER '_' Y NO PONER ESPACIOS SINO QUEDA UN LOOP!" << endl;
                             cout << "Printing persons: " << endl;
                             for (int i = 0; i < Persons.size(); i++)
-                                cout <<"Person #" << i <<"Name: " << Persons.at(i)->getName() << " SrName: " << Persons.at(i)->getsrName() << endl;
+                                cout << "Person #" << i << "Name: " << Persons.at(i)->getName() << " SrName: " << Persons.at(i)->getsrName() << endl;
                             cout << "Ingrese la posicion del usuario al que quieres mandar mensaje: " << endl;
                             cin >> personPos;
                             cout << "Ingrese el mensaje: " << endl;
                             cin >> message;
                             numKey = Persons.at(personPos)->getKey();
-                            //string messageEncrypted = ceaserCipher(message,numKey);
+                            //Aqui estoy probando los cifrados
+//                            string messageEncrypted = ceaserCipher(message, numKey, "");
+//                            cout << "Message encrypted: " << messageEncrypted << endl;
+//                            string messageDecrypted = deceaserCipher(messageEncrypted, numKey, "");
+//                            cout << "Message encrypted: " << messageDecrypted << endl;
                             Persons.at(personPos)->setMessage(message);
                             break;
                         }
                         case 2:
                         {
-                            for(int i =0;i <Persons.size();i++){
-                                for(int j = 0;j < Persons.at(i)->getMessage().size();j++){
-                                    cout << "Message: " <<Persons.at(i)->getMessage().at(j) << endl;
+                            for (int i = 0; i < Persons.size(); i++) {
+                                for (int j = 0; j < Persons.at(i)->getMessage().size(); j++) {
+                                    cout << "Message: " << Persons.at(i)->getMessage().at(j) << endl;
                                 }
                                 cout << endl;
                             }
                             break;
                         }
                         case 3:
-                        {  
+                        {
                             string name;
                             cout << "Ingrese su nombre: " << endl;
                             cin >> name;
-                            for(int i = 0;i<Persons.size();i++)
-                                if(Persons.at(i)->getName() == name)
+                            for (int i = 0; i < Persons.size(); i++)
+                                if (Persons.at(i)->getName() == name)
                                     cout << "Tu llave es: " << Persons.at(i)->getKey() << endl;
                             break;
                         }
@@ -122,11 +127,15 @@ int main(int argc, char** argv) {
                 }
                 break;
             }
-            case 4:{
-                string chain;
-                cout << "Ingrese un string: " <<endl;
+            //this is just a test case and is not part of the lab
+            case 4:
+            {
+                cout << "part of testing" << endl;
+                string chain, result;
+                cout << "Ingrese un string: " << endl;
                 cin >> chain;
-                ceaserCipher(chain,3,"");
+                result = ceaserCipher(chain, 3, "");
+                cout << "This  is the result: " << result << endl;
             }
 
         }
@@ -135,35 +144,56 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-//string split(string messageToBeCiphered,int movements){
-//    for(int i=0;i < messageToBeCiphered.size();i++){
-//        
-//    }
-//    
-//    return messageToBeCiphered;
-//}
-
-string ceaserCipher(string messageToBeCiphered, int keys,string newMessage) {
+string ceaserCipher(string messageToBeCiphered, int keys, string newMessage) {
     string partOfMessage = "";
-    if(keys == 0){
+    if (keys > 0) {
+        cout << "keys" << keys << endl;
+        int flag = 1;
+        for (int i = 0; i < messageToBeCiphered.size();) {
+            for (int j = 0; j < keys; j++) {
+                partOfMessage += messageToBeCiphered[i];
+            }
+            for (int k = 0; k < partOfMessage.size(); k++) {
+                if (flag) {
+                    newMessage += char(int(partOfMessage[k] + keys));
+                    flag = 0;
+                } else if (!flag) {
+                    newMessage += char(int(partOfMessage[k] - keys));
+                    flag = 1;
+                }
+            }
+            partOfMessage = "";
+            i += keys;
+        }
+    } else {
         return newMessage;
     }
-    int flag = 1;
-    for (int i = 0; i < messageToBeCiphered.size(); i+=keys) {
-        for (int j = 0; j < keys; j++) {
-            partOfMessage += messageToBeCiphered[i];
-        }
-        for(int k = 0;k<partOfMessage.size();k++){
-            if (flag) {
-                newMessage += char(int(partOfMessage[k]+keys));
-                flag = 0;
-            }else if(!flag){
-                newMessage += char(int(partOfMessage[k]+keys));
-                flag = 1;
-            }
-        }
-        partOfMessage = "";
-    }
+    return ceaserCipher(messageToBeCiphered, keys - 1, newMessage);
+}
 
-    ceaserCipher(messageToBeCiphered,keys - 1,newMessage);
+string deceaserCipher(string messageToBeCiphered, int keys, string newMessage) {
+    string partOfMessage = "";
+    if (keys > 0) {
+        cout << "keys" << keys << endl;
+        int flag = 0;
+        for (int i = 0; i < messageToBeCiphered.size();) {
+            for (int j = 0; j < keys; j++) {
+                partOfMessage += messageToBeCiphered[i];
+            }
+            for (int k = 0; k < partOfMessage.size(); k++) {
+                if (flag) {
+                    newMessage += char(int(partOfMessage[k] + keys));
+                    flag = 0;
+                } else if (!flag) {
+                    newMessage += char(int(partOfMessage[k] - keys));
+                    flag = 1;
+                }
+            }
+            partOfMessage = "";
+            i += keys;
+        }
+    } else {
+        return newMessage;
+    }
+    return ceaserCipher(messageToBeCiphered, keys - 1, newMessage);
 }
